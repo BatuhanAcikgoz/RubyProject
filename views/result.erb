@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= class_name %> (<%= class_description %>)</title>
+  <style>
+      body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; }
+      .container { max-width: 800px; margin: auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
+      h1, h2 { text-align: left; }
+      .code { background-color: #2e2e2e; color: white; padding: 20px; font-family: "Courier New", Courier, monospace; border-radius: 5px; margin-top: 20px; }
+      button { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; display: block; margin-top: 20px; }
+      .output { margin-top: 20px; padding: 20px; background-color: #eef; border-radius: 5px; }
+      .input-container { margin-top: 20px; padding: 20px; background-color: #efe; border-radius: 5px; }
+      .input-container input { font-size: 16px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 100%; margin-top: 20px; }
+      .input-container button { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; display: block; margin: 20px auto; }
+      .input-container button:hover { background-color: #0056b3; }
+  </style>
+  <script>
+      function scrollToBottom() {
+          localStorage.setItem('scrollToBottom', 'true');
+      }
+
+      window.onload = function() {
+          if (localStorage.getItem('scrollToBottom') === 'true') {
+              window.scrollTo(0, document.body.scrollHeight);
+              localStorage.removeItem('scrollToBottom');
+          }
+      }
+  </script>
+</head>
+<body>
+
+<div class="container">
+  <h1><%= class_name %> (<%= class_description %>)</h1>
+
+  <% if defined?(class_code) %>
+    <h2>Kaynak Kodu:</h2>
+    <div class="code">
+      <pre><%= class_code %></pre>
+    </div>
+  <% end %>
+
+  <form action="/run_class" method="post" onsubmit="scrollToBottom()">
+    <h2>Girdi Kısmı:</h2>
+    <% input_form.each do |input| %>
+      <div class="input-container">
+        <label for="<%= input[:name] %>"><%= input[:label] %></label>
+        <input type="text" name="inputs[<%= input[:name] %>]" id="<%= input[:name] %>">
+      </div>
+    <% end %>
+
+    <input type="hidden" name="class_name" value="<%= class_name %>">
+    <button type="submit">Çalıştır</button>
+  </form>
+
+  <% if defined?(output) %>
+    <h2>Çıktı:</h2>
+    <div class="output">
+      <pre><%= output %></pre>
+    </div>
+  <% end %>
+</div>
+
+</body>
+</html>
